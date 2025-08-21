@@ -9,6 +9,7 @@ public class SoundManager : MonoBehaviour
     public AudioSource shootingSoundM1911;
     public AudioSource reloadingSoundM1911;
     public AudioSource emptySoundM1911;
+    public AudioSource shootingSoundAK74;
     private void Awake()
     {
         if (Instance != null && Instance != this)

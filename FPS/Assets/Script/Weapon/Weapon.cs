@@ -80,7 +80,7 @@ public class Weapon : MonoBehaviour
         //Auto Reload
         if (readyToShoot && !isShooting && !isReloading && bulletsLeft <= 0)
         {
-            Reload();
+            //Reload();
         }
 
         if (readyToShoot && isShooting && bulletsLeft > 0)
@@ -102,7 +102,7 @@ public class Weapon : MonoBehaviour
 
         muzzleEffect.GetComponent<ParticleSystem>().Play();
         _animator.SetTrigger("RECOIL");
-        SoundManager.Instance.shootingSoundM1911.Play();
+        SoundManager.Instance.shootingSoundAK74.Play();
 
         readyToShoot = false;
 
@@ -132,6 +132,8 @@ public class Weapon : MonoBehaviour
     private void Reload()
     {
         SoundManager.Instance.reloadingSoundM1911.Play();
+
+        _animator.SetTrigger("RELOAD");
 
         isReloading = true;
         Invoke("ReloadCompleted", reloadTime);

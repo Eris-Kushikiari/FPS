@@ -70,6 +70,8 @@ public class Weapon : MonoBehaviour
     {
         if (isActiveWeapon)
         {
+            GetComponent<Outline>().enabled = false;
+
             if (bulletsLeft == 0 && isShooting)
             {
                 SoundManager.Instance.emptySoundM1911.Play();

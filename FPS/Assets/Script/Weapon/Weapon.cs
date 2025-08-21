@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
+    public bool isActiveWeapon;
 
     //shooting
     public bool isShooting, readyToShoot;
@@ -34,6 +35,9 @@ public class Weapon : MonoBehaviour
     public float reloadTime;
     public int magazineSize, bulletsLeft;
     public bool isReloading;
+
+    public Vector3 spawnPosition;
+    public Vector3 spawnRotation;
 
     public enum WeaponModel
     {
@@ -64,41 +68,44 @@ public class Weapon : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (bulletsLeft == 0 && isShooting)
+        if (isActiveWeapon)
         {
-            SoundManager.Instance.emptySoundM1911.Play();
-        }
+            if (bulletsLeft == 0 && isShooting)
+            {
+                SoundManager.Instance.emptySoundM1911.Play();
+            }
 
-        if (currentShootingMode == ShootingMode.Auto)
-        {
-            isShooting = Input.GetKey(KeyCode.Mouse0);
-        }
-        else if (currentShootingMode == ShootingMode.Single || currentShootingMode == ShootingMode.Burst)
-        {
-            isShooting = Input.GetKeyDown(KeyCode.Mouse0);
-        }
+            if (currentShootingMode == ShootingMode.Auto)
+            {
+                isShooting = Input.GetKey(KeyCode.Mouse0);
+            }
+            else if (currentShootingMode == ShootingMode.Single || currentShootingMode == ShootingMode.Burst)
+            {
+                isShooting = Input.GetKeyDown(KeyCode.Mouse0);
+            }
 
-        if (Input.GetKeyDown(KeyCode.R) && bulletsLeft < magazineSize && isReloading == false)
-        {
-            Reload();
-        }
+            if (Input.GetKeyDown(KeyCode.R) && bulletsLeft < magazineSize && isReloading == false)
+            {
+                Reload();
+            }
 
-        //Auto Reload
-        if (readyToShoot && !isShooting && !isReloading && bulletsLeft <= 0)
-        {
-            //Reload();
-        }
+            //Auto Reload
+            //if (readyToShoot && !isShooting && !isReloading && bulletsLeft <= 0)
+            //{
+                //Reload();
+            //}
 
-        if (readyToShoot && isShooting && bulletsLeft > 0)
-        {
-            burstBulletsLeft = bulletsPerBurst;
-            FireWeapon();
-        }
+            if (readyToShoot && isShooting && bulletsLeft > 0)
+            {
+                burstBulletsLeft = bulletsPerBurst;
+                FireWeapon();
+            }
 
-        //Ammo UI
-        if (AmmoManager.Instance.ammoDisplay != null)
-        {
-            AmmoManager.Instance.ammoDisplay.text = $"{bulletsLeft / bulletsPerBurst}/{magazineSize / bulletsPerBurst}";
+            //Ammo UI
+            if (AmmoManager.Instance.ammoDisplay != null)
+            {
+                AmmoManager.Instance.ammoDisplay.text = $"{bulletsLeft / bulletsPerBurst}/{magazineSize / bulletsPerBurst}";
+            } 
         }
     }
 

@@ -8,29 +8,39 @@ public class Weapon : MonoBehaviour
 {
     public bool isActiveWeapon;
 
+    [Header("Shooting")]
     //shooting
     public bool isShooting, readyToShoot;
     private bool _allowReset = true;
     public float shootingDelay = 2f;
 
+    [Header("Burst")]
     //Burst
     public int bulletsPerBurst = 3;
     public int burstBulletsLeft;
 
+    [Header("Spread")]
     //Spread
     public float spreadIntensity;
+    public float hipSpreadIntensity;
+    public float adsSpreadIntensity;
 
+    [Header("Bullet")]
     public GameObject bulletPrefab;
     public Transform bulletSpawn;
     public float bulletVelocity = 30f;
     public float bulletPrefabLifeTime = 3f;
 
+    [Header("Effects")]
     //Effects
     public GameObject muzzleEffect;
 
+    [Header("Animation")]
     //Animation
     internal Animator _animator;
+    public bool isADS;
 
+    [Header("Reloading")]
     //Reloading
     public float reloadTime;
     public int magazineSize, bulletsLeft;
@@ -63,6 +73,7 @@ public class Weapon : MonoBehaviour
         _animator = GetComponent<Animator>();
 
         bulletsLeft = magazineSize;
+        spreadIntensity = hipSpreadIntensity;
     }
 
     // Update is called once per frame
@@ -70,7 +81,17 @@ public class Weapon : MonoBehaviour
     {
         if (isActiveWeapon)
         {
-            GetComponent<Outline>().enabled = false;
+            if (Input.GetMouseButtonDown(1))
+            {
+                EnterADS();
+            }
+
+            if (Input.GetMouseButtonUp(1))
+            {
+                ExitADS();
+            }
+
+                GetComponent<Outline>().enabled = false;
 
             if (bulletsLeft == 0 && isShooting)
             {
@@ -107,6 +128,22 @@ public class Weapon : MonoBehaviour
         }
     }
 
+    private void EnterADS()
+    {
+        _animator.SetTrigger("enterADS");
+        isADS = true;
+        HUDManager.Instance.middleDot.SetActive(false);
+        spreadIntensity = adsSpreadIntensity;
+    }
+
+    private void ExitADS()
+    {
+        _animator.SetTrigger("exitADS");
+        isADS = false;
+        HUDManager.Instance.middleDot.SetActive(true);
+        spreadIntensity = hipSpreadIntensity;
+    }
+
 
 
     private void FireWeapon()
@@ -114,7 +151,16 @@ public class Weapon : MonoBehaviour
         bulletsLeft--;
 
         muzzleEffect.GetComponent<ParticleSystem>().Play();
-        _animator.SetTrigger("RECOIL");
+
+        if (isADS)
+        {
+            _animator.SetTrigger("RECOIL_ADS");
+        }
+        else
+        {
+            _animator.SetTrigger("RECOIL");
+        }
+            
 
         //SoundManager.Instance.shootingSoundAK74.Play();
 
@@ -198,10 +244,10 @@ public class Weapon : MonoBehaviour
 
         Vector3 direction = targetPoint - bulletSpawn.position;
 
-        float x = UnityEngine.Random.Range(-spreadIntensity, spreadIntensity);
+        float z = UnityEngine.Random.Range(-spreadIntensity, spreadIntensity);
         float y = UnityEngine.Random.Range(-spreadIntensity, spreadIntensity);
 
-        return direction + new Vector3(x,y,0);
+        return direction + new Vector3(0,y,z);
 
 
     }

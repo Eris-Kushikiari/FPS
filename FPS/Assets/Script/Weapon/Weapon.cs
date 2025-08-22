@@ -214,9 +214,7 @@ public class Weapon : MonoBehaviour
 
         WeaponManager.Instance.DecreaseTotalAmmo(bulletsToReload, thisWeaponModel);
 
-        isReloading = false;
-
-
+        
         isReloading = false;
     }
 
@@ -244,10 +242,10 @@ public class Weapon : MonoBehaviour
 
         Vector3 direction = targetPoint - bulletSpawn.position;
 
-        float z = UnityEngine.Random.Range(-spreadIntensity, spreadIntensity);
+        float x = UnityEngine.Random.Range(-spreadIntensity, spreadIntensity);
         float y = UnityEngine.Random.Range(-spreadIntensity, spreadIntensity);
 
-        return direction + new Vector3(0,y,z);
+        return direction + new Vector3(x,y,0);
 
 
     }
